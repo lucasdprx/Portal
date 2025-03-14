@@ -3,6 +3,8 @@
 
 #include "PortalGun.h"
 
+#include "Camera/CameraComponent.h"
+
 // Sets default values
 APortalGun::APortalGun()
 {
@@ -10,19 +12,38 @@ APortalGun::APortalGun()
 	PrimaryActorTick.bCanEverTick = true;
 
 }
-void APortalGun::ShootPortal()
+
+FVector APortalGun::ShootPortal(AActor *Portal, UCameraComponent *Camera, AActor *Player)
 {
+	FVector StartLocation = Camera->GetComponentTransform().GetLocation();
+	FVector rotation = Player->GetActorRotation().Vector() + Camera->GetComponentTransform().GetRotation().Rotator().Vector();
+	FVector EndLocation = StartLocation + Camera->GetComponentTransform().GetLocation().ForwardVector * 100000.0f;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	FHitResult HitResult;
+	UWorld*World = GetWorld();
+	if (World == nullptr)
+	{
+		return FVector::ZeroVector;
+	}
+	GetWorld()->SweepSingleByChannel(HitResult, StartLocation, EndLocation, FQuat::Identity, ECC_Visibility, FCollisionShape::MakeSphere(1.0f), QueryParams);
 	
+	if (HitResult.bBlockingHit && Portal != nullptr)
+	{
+		Portal->SetActorLocation(HitResult.ImpactPoint);
+	}
+	return StartLocation;
 }
 
-// Called when the game starts or when spawned
+
+
 void APortalGun::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void APortalGun::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
