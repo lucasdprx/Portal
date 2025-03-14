@@ -3,10 +3,29 @@
 
 #include "PortalGun.h"
 
-PortalGun::PortalGun()
+// Sets default values
+APortalGun::APortalGun()
 {
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+}
+void APortalGun::ShootPortal()
+{
+	
 }
 
-PortalGun::~PortalGun()
+// Called when the game starts or when spawned
+void APortalGun::BeginPlay()
 {
+	Super::BeginPlay();
+	
 }
+
+// Called every frame
+void APortalGun::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+

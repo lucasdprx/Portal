@@ -3,13 +3,26 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "PortalGun.generated.h"
 
-/**
- * 
- */
-class PORTAL_API PortalGun
+UCLASS()
+class PORTAL_API APortalGun : public AActor
 {
-public:
-	PortalGun();
-	~PortalGun();
+	GENERATED_BODY()
+	
+public:	
+	APortalGun();
+
+	UFUNCTION(BlueprintCallable)
+	void ShootPortal();
+
+protected:
+	virtual void BeginPlay() override;
+
+public:	
+	virtual void Tick(float DeltaTime) override;
+	
+	UPROPERTY(EditAnywhere)
+	USceneComponent* Portal;
 };
