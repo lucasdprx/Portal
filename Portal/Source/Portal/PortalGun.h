@@ -17,14 +17,13 @@ public:
 	APortalGun();
 
 	UFUNCTION(BlueprintCallable)
-	FVector ShootPortal(AActor* Portal, UCameraComponent* Camera, AActor* Player);
+	FVector ShootPortal(AActor* Portal, UCameraComponent* Camera);
 
 protected:
 	virtual void BeginPlay() override;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-	
-	AActor* Portal1;
-	AActor* Portal2;
+
+	static FVector NormalizeVector(FVector Vec);
 };
