@@ -17,7 +17,7 @@ public:
 	APortalGun();
 
 	UFUNCTION(BlueprintCallable)
-	AActor* ShootPortal(AActor* Portal, UCameraComponent* Camera);
+	AActor* ShootPortal(AActor* Portal, UCameraComponent* Camera) const;
 
 protected:
 	virtual void BeginPlay() override;

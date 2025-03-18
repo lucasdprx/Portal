@@ -13,38 +13,36 @@ APortalGun::APortalGun()
 
 }
 
-AActor* APortalGun::ShootPortal(AActor *Portal, UCameraComponent *Camera)
+AActor* APortalGun::ShootPortal(AActor *Portal, UCameraComponent *Camera) const
 {
-	FVector StartLocation = Camera->GetComponentLocation();
-	FVector EndLocation = StartLocation + Camera->GetForwardVector() * 100000.0f;
+	const FVector StartLocation = Camera->GetComponentLocation();
+	const FVector EndLocation = StartLocation + Camera->GetForwardVector() * 100000.0f;
 	
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
+	QueryParams.AddIgnoredActor(Portal);
 
 	FHitResult HitResult;
-	UWorld*World = GetWorld();
-	if (World == nullptr)
+	const UWorld* World = GetWorld();
+	if (World == nullptr || Portal == nullptr)
 	{
 		return nullptr;
 	}
 	GetWorld()->SweepSingleByChannel(HitResult, StartLocation, EndLocation, FQuat::Identity, ECC_Visibility, FCollisionShape::MakeSphere(1.0f), QueryParams);
 	
-	if (HitResult.bBlockingHit && Portal != nullptr)
+	if (!HitResult.bBlockingHit)
 	{
-		auto HitRotation = HitResult.ImpactNormal.Rotation();
-
-		if (HitResult.ImpactNormal.Z >= 0.99f)
-		{
-			HitRotation += FRotator(0.0f, Camera->GetComponentRotation().Yaw, 0);
-		}
-
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, HitResult.GetActor()->GetName());
-		}
-		Portal->SetActorLocation(HitResult.ImpactPoint);
-		Portal->SetActorRotation(HitRotation.Quaternion());
+		return nullptr;
 	}
+	auto NewRotation = HitResult.ImpactNormal.Rotation();
+	auto NewLocation = HitResult.ImpactPoint + HitResult.ImpactNormal * 2.0f;
+
+	if (HitResult.ImpactNormal.Z >= 0.99f)
+	{
+		NewRotation += FRotator(0.0f, Camera->GetComponentRotation().Yaw, 180);
+	}
+	Portal->SetActorLocation(NewLocation);
+	Portal->SetActorRotation(NewRotation.Quaternion());
 	return HitResult.GetActor();
 }
 
