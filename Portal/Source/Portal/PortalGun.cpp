@@ -17,13 +17,13 @@ AActor* APortalGun::ShootPortal(AActor *Portal, UCameraComponent *Camera) const
 {
 	const FVector StartLocation = Camera->GetComponentLocation();
 	const FVector EndLocation = StartLocation + Camera->GetForwardVector() * 100000.0f;
+	const UWorld* World = GetWorld();
 	
+	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 	QueryParams.AddIgnoredActor(Portal);
-
-	FHitResult HitResult;
-	const UWorld* World = GetWorld();
+	
 	if (World == nullptr || Portal == nullptr)
 	{
 		return nullptr;
@@ -41,6 +41,8 @@ AActor* APortalGun::ShootPortal(AActor *Portal, UCameraComponent *Camera) const
 	{
 		NewRotation += FRotator(0.0f, Camera->GetComponentRotation().Yaw, 180);
 	}
+
+	
 	Portal->SetActorLocation(NewLocation);
 	Portal->SetActorRotation(NewRotation.Quaternion());
 	return HitResult.GetActor();
