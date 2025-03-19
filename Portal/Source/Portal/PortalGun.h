@@ -14,15 +14,12 @@ class PORTAL_API APortalGun : public AActor
 	GENERATED_BODY()
 	
 public:	
-	APortalGun();
 
 	UFUNCTION(BlueprintCallable)
 	AActor* ShootPortal(AActor* Portal, UCameraComponent* Camera) const;
-
-protected:
-	virtual void BeginPlay() override;
-
-public:	
-	virtual void Tick(float DeltaTime) override;
-
+	
+private:
+	static TArray<FVector> GetBottomPortal(const AActor* Portal);
+	static TArray<FVector> GetPointCenter(const AActor* Portal, const FVector& HitPosition);
+	static bool            AllBottomIsOnWall(const AActor* Portal, const UWorld*  World);
 };
