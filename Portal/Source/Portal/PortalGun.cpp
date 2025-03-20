@@ -53,11 +53,8 @@ AActor* APortalGun::ShootPortal(AActor *Portal, UCameraComponent *Camera) const
 				i--;
 				continue;
 			}
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, (HitResult.Normal * HitResult.Distance).ToString());
 			Portal->SetActorLocation(Portal->GetActorLocation() - HitResult.Normal * HitResult.Distance);
 		}
-
-		DrawDebugLine(GetWorld(), StartPoint, HitResult.ImpactPoint, FColor::Green, false, 200.0f);
 	}
 
 	if (!AllBottomIsOnWall(Portal, World))
