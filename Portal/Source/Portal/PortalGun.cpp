@@ -1,15 +1,12 @@
 #include "PortalGun.h"
 #include "Camera/CameraComponent.h"
 
-AActor* APortalGun::ShootPortal(AActor *Portal, UCameraComponent *Camera) const
+AActor* APortalGun::ShootPortal(AActor *Portal, UCameraComponent *Camera, FHitResult HitResult) const
 {
-	const FVector  StartLocation = Camera->GetComponentLocation();
 	const FVector  InitLocation = Portal->GetActorLocation();
 	const FRotator InitRotation = Portal->GetActorRotation();
-	const FVector  EndLocation = StartLocation + Camera->GetForwardVector() * 100000.0f;
 	const UWorld*  World = GetWorld();
 	
-	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 	QueryParams.AddIgnoredActor(Portal);
@@ -18,7 +15,6 @@ AActor* APortalGun::ShootPortal(AActor *Portal, UCameraComponent *Camera) const
 	{
 		return nullptr;
 	}
-	World->SweepSingleByChannel(HitResult, StartLocation, EndLocation, FQuat::Identity, ECC_Visibility, FCollisionShape::MakeSphere(1.0f), QueryParams);
 	AActor* Object = HitResult.GetActor();
 	
 	if (!HitResult.bBlockingHit)

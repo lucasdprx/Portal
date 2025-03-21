@@ -16,7 +16,7 @@ class PORTAL_API APortalGun : public AActor
 public:	
 
 	UFUNCTION(BlueprintCallable)
-	AActor* ShootPortal(AActor* Portal, UCameraComponent* Camera) const;
+	AActor* ShootPortal(AActor* Portal, UCameraComponent* Camera, FHitResult HitResult) const;
 	
 private:
 	static TArray<FVector> GetBottomPortal(const AActor* Portal);
